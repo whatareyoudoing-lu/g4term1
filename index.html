@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>神秘小屋 · The Mystery House</title><meta name="description" content="A Chinese-language escape room for Grade 4.">
+<style>:root{color-scheme:dark;--ink:#fff1dc;--dim:#d4c3b2;--amber:#ffcf8a;--line:#ffffff26;--panel:#29262b;--green:#bce4bc;font:16px/1.55 system-ui,-apple-system,"Microsoft YaHei",sans-serif}
+*{box-sizing:border-box} body{margin:0;background:radial-gradient(ellipse at 30% 0%,#3a3039,#1c2025 68%);color:var(--ink);min-height:100vh}
+h1,h2,h3,p{margin:0 0 .65rem} h1,h2,h3{line-height:1.17} h1,h2{font-family:Georgia,"Microsoft YaHei",serif} h1{font-size:clamp(2.4rem,6vw,5.6rem);letter-spacing:-.045em} h2{font-size:clamp(1.75rem,4vw,3.25rem)} small,.muted{color:var(--dim)} :focus-visible{outline:3px solid #a3e9da;outline-offset:3px}
+header{position:sticky;top:0;z-index:4;display:flex;align-items:center;justify-content:space-between;gap:.6rem;background:#202127f0;border-bottom:1px solid var(--line);padding:.65rem max(1rem,calc((100vw - 1220px)/2));backdrop-filter:blur(8px)}
+.brand{font-weight:700;color:var(--amber);white-space:nowrap}.headbuttons,.row{display:flex;flex-wrap:wrap;gap:.55rem;align-items:center}.headbuttons{justify-content:flex-end}
+main{max-width:1220px;margin:auto;padding:clamp(1rem,3vw,2.6rem) 1rem 3rem} button,input{font:inherit} button{border:1px solid var(--line);border-radius:10px;padding:.54rem .86rem;background:#3a3339;color:var(--ink);cursor:pointer;min-height:42px;transition:background .16s,border-color .16s}button:hover:not(:disabled){background:#50414a;border-color:#b88462}button:disabled{cursor:default;opacity:.48}.primary{color:#2d2120;background:var(--amber);border-color:var(--amber);font-weight:750}.primary:hover:not(:disabled){background:#ffe4a8}.quiet{background:transparent}.selected,button[aria-pressed=true]{border-color:var(--amber);box-shadow:inset 0 0 0 1px var(--amber)}
+input{background:#201e24;border:1px solid #95735d;border-radius:10px;color:var(--ink);padding:.62rem .75rem;min-width:0}label{font-weight:650} .kicker{color:var(--amber);font-size:.78rem;font-weight:760;letter-spacing:.12em;text-transform:uppercase}
+.hero{display:grid;grid-template-columns:1fr 1.08fr;gap:clamp(1rem,4vw,4rem);align-items:center}.hero .scene{box-shadow:0 20px 85px #120f1570}.hero h1 span,.roomtitle span{display:block;color:var(--amber);font-size:.55em;margin-top:.24em;letter-spacing:0}.hero form{margin:1.1rem 0;display:grid;gap:.4rem}.hero form .row input{flex:1}.rules{padding:1rem 0;color:var(--dim);border-top:1px solid var(--line)}
+.chapters{display:grid;grid-template-columns:repeat(4,1fr);gap:.55rem;margin-bottom:1.3rem}.chapter{padding:.5rem .75rem;border-bottom:2px solid #ffffff27;font-size:.84rem;color:var(--dim)}.chapter.active{color:var(--amber);border-color:var(--amber)}.chapter.done{color:var(--green);border-color:#81aa84}.chapter b{display:block}
+.roomtitle{margin-bottom:.7rem}.layout{display:grid;grid-template-columns:minmax(0,2.35fr) minmax(230px,1fr);gap:1rem;align-items:start}.scene{position:relative;background:#3c343e;border:1px solid #8b6a51;border-radius:16px;overflow:hidden;isolation:isolate}.scene canvas{display:block;width:100%;height:auto}.spot{position:absolute;left:var(--x);top:var(--y);transform:translate(-50%,-50%);border-color:#edbd82;background:#241e23e8;white-space:nowrap;padding:.35rem .62rem;box-shadow:0 3px 12px #1b1119a0;font-size:clamp(.71rem,1.4vw,.94rem);border-radius:30px}.spot[data-open=false]{border-color:#b4a093}.spot[data-done=true]{border-color:#88bb93;color:var(--green)}.spot i{font-style:normal;color:var(--amber);margin-right:.27rem}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:1rem}.panel+.panel{margin-top:.8rem}.bag .row{align-items:stretch}.item{text-align:left}.caption{font-size:.9rem;color:var(--dim);margin:.6rem .1rem 0}.route{list-style:none;padding:0;margin:.55rem 0 0}.route li{font-size:.9rem;margin:.25rem 0;color:var(--dim)}.route .current{color:var(--amber)}.route .cleared{color:var(--green)}
+dialog{width:min(740px,calc(100% - 1.2rem));max-height:calc(100dvh - 1.5rem);border:1px solid #ae8668;border-radius:18px;background:#2a262e;color:var(--ink);padding:0;box-shadow:0 20px 90px #110d14c0}dialog::backdrop{background:#120f16b9} .modal-content{padding:1.15rem clamp(1rem,3vw,1.8rem) 1.25rem}.modal-top{display:flex;justify-content:space-between;gap:1rem;align-items:start;border-bottom:1px solid var(--line);margin-bottom:.9rem;padding-bottom:.5rem}.modal-top h3{font-size:1.35rem}.modal-top button{flex:none}.han{display:inline-flex;flex-direction:column;font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif;font-size:1.09em;line-height:1.38}.py{display:block;color:#ffd19a;font-size:.75em;font-weight:500;line-height:1.38}.no-pinyin .py{display:none}
+.statement{padding:.7rem .85rem;background:#4a3737;border-left:3px solid #dfaa74;border-radius:3px 10px 10px 3px;margin:0 0 .8rem}.choices{display:grid;gap:.5rem;margin:.65rem 0}.choices button{text-align:left}.chips{display:flex;flex-wrap:wrap;gap:.42rem;margin:.65rem 0}.answerstrip{min-height:64px;border:1px dashed #a78369;border-radius:10px;padding:.48rem}.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin:.6rem 0}.match-col{display:flex;flex-direction:column;gap:.4rem}.match-col button{text-align:left;flex:1}.linked{background:#413a4b}.badge{color:var(--amber);margin-right:.35rem;font-weight:750}.hints{margin-top:1rem;border-top:1px solid var(--line);padding-top:.6rem}.feedback{color:#ffd3a9;margin:.55rem 0;min-height:1.3em}.good{color:var(--green)}.drop{border:2px dashed #b58e6d;background:#42353b;width:100%;padding:1.3rem;margin:.6rem 0}.drop:hover,.drop.over{border-color:var(--amber);background:#62493f}
+.notes{display:grid;gap:.55rem;margin:.55rem 0}.notes article{border:1px solid var(--line);background:#352d35;border-radius:10px;padding:.66rem .75rem}.card-map{display:flex;gap:.4rem;flex-wrap:wrap}.card-map span{padding:.28rem .5rem;background:#433642;border-radius:8px}
+.victory{max-width:680px;text-align:center;margin:1.3rem auto;border-color:#9e794f;background:radial-gradient(ellipse at 50% 0%,#6b4936,#2e2932 65%);padding:2rem 1rem}.trophy{font-size:clamp(5rem,16vw,8rem);filter:drop-shadow(0 0 25px #f8b65b6c);line-height:1.15}.victory h2{overflow-wrap:anywhere}.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:.55rem;margin:1.2rem 0}.stats div{background:#241f28b0;border:1px solid var(--line);border-radius:10px;padding:.7rem}.stats strong{display:block;font-size:1.5rem;color:var(--amber)}.victory .row{justify-content:center}.pin{width:8rem;letter-spacing:.3em;font-weight:800;text-align:center}
+@media(max-width:780px){.hero,.layout{grid-template-columns:1fr}.hero .scene{grid-row:1}.hero .scene canvas{max-height:45vh;object-fit:cover}.layout .bag{margin-top:0}}
+@media(max-width:510px){.brand span,.spot span{display:none}.chapters{gap:.2rem}.chapter{font-size:.7rem;padding:.3rem}.spot{min-width:44px;padding:.38rem .4rem}.spot i{margin-right:0}.spot::after{content:attr(data-short)} header button{font-size:.76rem;padding:.38rem}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+.modal-top .row{justify-content:flex-end}.modal-top .row button{font-size:.82rem}.modal-top h3{flex:1;min-width:105px}
+.medal-rules{border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:.75rem .9rem;margin-top:.25rem;font-size:.9rem}
+.medal-rules h3{font-size:1rem}.medal-rules ul{list-style:none;margin:.5rem 0;padding:0}.medal-rules p{margin-bottom:.25rem}.medal-rules strong{color:var(--amber)}
+.meaning-notes{padding-inline-start:1.3rem}.meaning-notes li+li{margin-top:.55rem}
+</style></head><body>
+<header><div class="brand">◇ 神秘小屋 <span>· The Mystery House</span></div><div class="headbuttons">
+<button type="button" data-action="pinyin" id="pinyin"></button>
+<button type="button" data-action="board" id="board" hidden>线索板 · Clue Board</button>
+<button type="button" data-action="meaning" id="meaning" hidden>句意 · Meaning</button></div></header>
+<main></main><dialog aria-labelledby="modal-title"><div class="modal-content"></div></dialog>
+<script>const z=(han,py)=>({han,py});
+const words=[
+[['确定','què dìng','to be sure'],['怎么','zěn me','how'],['回答','huí dá','to answer'],['问题','wèn tí','question; problem'],['容易','róng yì','easy'],['来','lái','to come; to take the initiative'],['告诉','gào su','to tell'],['解决','jiě jué','to solve'],['不确定','bù què dìng','not sure']],
+[['晚餐','wǎn cān','dinner'],['炸鸡','zhá jī','fried chicken'],['太好了','tài hǎo le','great!'],['摆','bǎi','to set; to arrange'],['桌子','zhuō zi','table']],
+[['听到','tīng dào','to hear'],['雷声','léi shēng','thunder'],['声音','shēng yīn','sound; voice'],['大','dà','loud; big'],['睡','shuì','to sleep'],['昨晚','zuó wǎn','last night'],['睡不着','shuì bu zháo','unable to fall asleep']]
+];
+const dialogue=[
+[z('A · 我不确定怎么回答这个问题。','wǒ bù què dìng zěn me huí dá zhè ge wèn tí'),z('B · 这很容易。','zhè hěn róng yì'),z('B · 我来告诉你怎么解决它。','wǒ lái gào su nǐ zěn me jiě jué tā')],
+[z('A · 我们晚餐吃什么？','wǒ men wǎn cān chī shén me'),z('B · 我们吃炸鸡。','wǒ men chī zhá jī'),z('A · 太好了！我来摆桌子。','tài hǎo le! wǒ lái bǎi zhuō zi')],
+[z('A · 昨晚你听到雷声了吗？','zuó wǎn nǐ tīng dào léi shēng le ma'),z('B · 是的。声音太大了，我睡不着。','shì de. shēng yīn tài dà le, wǒ shuì bu zháo'),z('A · 我也睡不着。','wǒ yě shuì bu zháo')]
+];
+const q=(prompt,choices)=>({kind:'pick',prompt,choices});
+const order=(prompt,tiles)=>({kind:'order',prompt,choices:tiles});
+const match=(i,from,to,reverse=false)=>({kind:'match',reverse,pairs:words[i].slice(from,to).map(([h,p,e])=>[z(h,p),e])});
+const use=(item,prompt)=>({kind:'use',item,prompt});
+const labels=[
+['被锁住的书房','The Locked Study','The door clicks shut. A loose page sticks out from the bookshelf.','大门突然锁上了。书架里露出一张纸。'],
+['神秘的晚餐','The Missing Dinner','The lamp is on, but dinner is missing. A folded menu sits by the kitchen.','灯亮着，晚餐却不见了。厨房旁有一张菜单。'],
+['昨夜的雷声','The Thunder Mystery','Rain runs down the window. A diary lies beside the bed.','雨水滑过窗户。床边放着一本日记。'],
+['逃离神秘小屋','The Front Door','Three cards fit the lock. Read each card and find its number.','三张线索卡可以打开密码锁。']
+];
+const items={
+key:['🔑','黄铜钥匙','Brass key'],apple:['🍎','苹果','Apple'],milk:['🥛','牛奶','Milk'],chicken:['🍗','炸鸡','Fried chicken'],plate:['🍽️','餐具','Place setting'],record:['📜','天气记录','Weather record']
+};
+const tasks=[
+[
+['书架','Bookshelf',15,38,[match(0,0,5),match(0,5,9,true)],'Scan the word tags on the shelf.','Notice 回答 and 解决.','Answer a question, solve a problem.'],
+['书桌','Writing desk',49,58,[order('Put the conversation in order. Read each speaker’s line.',dialogue[0]),q(dialogue[0][2],['B offers to show how to solve the problem.','A asks where the problem is.','B says nobody can solve it.'])],'Read the scraps on the desk.','Look for 我来 in the last line.','The speaker volunteers to help.','key'],
+['抽屉','Locked drawer',49,81,[use('key','Drag an item here, or select it and tap here.'),order('Rebuild the first line from the desk.',[z('我','wǒ'),z('不确定','bù què dìng'),z('怎么','zěn me'),z('回答','huí dá'),z('这个问题。','zhè ge wèn tí')]),q(dialogue[0][0],['A is unsure how to answer this question.','A is asking what the question is.','A already knows how to answer.'])],'Check the desk for an item that fits.','Read 不确定 and 怎么 together.','Here 怎么 is part of a statement about how to do something.'],
+['镶嵌柜','Inlaid cabinet',85,59,[q(z('这很容易。','zhè hěn róng yì'),['This is quite easy.','This is too hard.','That was interesting.']),order('Repair the cabinet label using the same pattern.',[z('今天的课','jīn tiān de kè'),z('很','hěn'),z('容易。','róng yì')])],'The label uses the same pattern as B’s short line.','Look at 很 before 容易.','Put the thing you describe first, then 很 and an adjective.']
+],
+[
+['菜单','Menu',25,41,[match(1,0,2,true),match(1,2,5),order('Restore the menu’s conversation.',dialogue[1])],'Unfold the menu by the kitchen.','晚餐 is the meal. 摆 is the action.','A asks about the meal and then volunteers after B answers.','plate'],
+['厨房','Kitchen pass',52,38,[order('Rebuild the question on the order slip.',[z('我们','wǒ men'),z('晚餐','wǎn cān'),z('吃','chī'),z('什么？','shén me')]),q(dialogue[1][0],['What are we having for dinner?','When will we have dinner?','Who is having dinner?']),q(dialogue[1][1],['We → eat → fried chicken','I → set → the table','They → cook → dinner'])],'Check the question on the menu.','Look for 什么 after 吃.','Find who does the action, the action, then the thing.'],
+['冰箱','Fridge',83,53,[q('Read both menu lines. Choose the food for tonight.',[z('炸鸡','zhá jī'),z('苹果','píng guǒ'),z('牛奶','niú nǎi')])],'Check the menu on the clue board.','Read B’s line. Find the word after 吃.','B names the dinner food in the second line.','chicken'],
+['餐桌','Dining table',46,78,[q(dialogue[1][2],['A is happy and offers to set the table.','B is happy and asks A to cook.','A says the table is already set.']),use('plate','Set the table. Drag or tap-select an item.'),use('chicken','Serve the dinner from the menu.'),q(z('妈妈做的炸鸡太___了！','mā ma zuò de zhá jī tài ___ le!'),[z('好吃','hǎo chī'),z('快','kuài'),z('锋利','fēng lì')])],'Use what you collected from the menu and fridge.','Check 摆桌子 and the food B mentions.','太 and 了 surround the adjective that describes how the food tastes.']
+],
+[
+['日记','Diary',23,70,[match(2,0,4,true),match(2,4,7)],'Read the diary by the bed.','Notice the difference between 声音 and 雷声.','声音 can be any sound. 雷声 is a particular sound in a storm.'],
+['雨窗','Rain window',50,32,[q('Find the weather record that matches the question in the diary.',[z('昨晚：雷声','zuó wǎn: léi shēng'),z('昨晚：小鸟的叫声','zuó wǎn: xiǎo niǎo de jiào shēng'),z('今天：雷声','jīn tiān: léi shēng')])],'Read A’s question in the diary.','Find both 昨晚 and 雷声.','Match the time and the sound on the same record.','record'],
+['时钟','Clock',82,26,[use('record','Insert the weather record.'),order('Restore the practice line about a sound someone did not hear.',[z('我','wǒ'),z('没','méi'),z('听','tīng'),z('到','dào'),z('她的声音。','tā de shēng yīn')]),q(dialogue[2][1],[z('听到了','tīng dào le'),z('没听到','méi tīng dào'),z('睡着了','shuì zháo le')])],'Read the weather record, then check B’s answer in the diary.','没 goes before 听到 when the result did not happen.','B says 是的 to a question about hearing thunder.'],
+['录音机','Recorder',80,71,[order('Restore the written recording. No sound is needed.',dialogue[2]),q(dialogue[2][2],['A and B both could not fall asleep.','Only A could not fall asleep.','Both of them fell asleep.']),q('Which pair means “can hear / cannot hear”?', [z('听得到／听不到','tīng de dào / tīng bu dào'),z('听到了／没听到','tīng dào le / méi tīng dào'),z('看得清／看不清','kàn de qīng / kàn bu qīng')])],'Read the transcript in the recorder.','Look for 也, then compare 得 and 不.','也 tells you A had the same experience. 得 and 不 between the verb and complement express possibility.'],
+['床头','Bedside panel',25,46,[order('Rebuild A’s line about not being able to fall asleep.',[z('我','wǒ'),z('也','yě'),z('睡','shuì'),z('不','bu'),z('着。','zháo')]),{kind:'match',reverse:false,prompt:'Match each note to the result that fits its situation.',pairs:[[z('这本书很简单，我看得___。','zhè běn shū hěn jiǎn dān, wǒ kàn de ___'),z('懂','dǒng')],[z('今天的水果太多了，我吃不___。','jīn tiān de shuǐ guǒ tài duō le, wǒ chī bu ___'),z('完','wán')],[z('这个桌子太重了，我搬不___。','zhè ge zhuō zi tài zhòng le, wǒ bān bu ___'),z('动','dòng')],[z('我没学过法语，我说不___。','wǒ méi xué guo fǎ yǔ, wǒ shuō bu ___'),z('好','hǎo')],[z('那个电影很受欢迎，你买得___它的票吗？','nà ge diàn yǐng hěn shòu huān yíng, nǐ mǎi de ___ tā de piào ma'),z('到','dào')],[z('你只有五分钟，来得___吗？','nǐ zhǐ yǒu wǔ fēn zhōng, lái de ___ ma'),z('及','jí')]]}],'Check the last line on the recorder, then the six notes.','For each note, read the situation before the comma.','Think about understanding, finishing, moving, doing well, getting something, or making it in time.']
+]
+];
+const cards=[
+{title:'书房证据 · Study card', prompt:'What did B offer to do?', quote:dialogue[0][2],options:[[3,z('回答这个问题','huí dá zhè ge wèn tí')],[7,z('告诉你怎么解决它','gào su nǐ zěn me jiě jué tā')],[1,z('摆桌子','bǎi zhuō zi')]],digit:7},
+{title:'晚餐证据 · Dinner card',prompt:'What did B say they would eat?',quote:dialogue[1][1],options:[[2,z('苹果','píng guǒ')],[4,z('炸鸡','zhá jī')],[9,z('牛奶','niú nǎi')]],digit:4},
+{title:'雷声证据 · Thunder card',prompt:'When did they hear the thunder?',quote:dialogue[2][0],options:[[6,z('今天','jīn tiān')],[8,z('明天','míng tiān')],[5,z('昨晚','zuó wǎn')]],digit:5}
+];
+
+function paint(canvas, room){
+  const c=canvas.getContext('2d'), W=1000,H=580;
+  function box(x,y,w,h,color,edge='#281e24',r=4){c.beginPath();c.roundRect(x,y,w,h,r);c.fillStyle=color;c.fill();if(edge){c.strokeStyle=edge;c.lineWidth=3;c.stroke();}}
+  function poly(points,color,edge='#281e24'){c.beginPath();points.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.closePath();c.fillStyle=color;c.fill();if(edge){c.strokeStyle=edge;c.lineWidth=3;c.stroke();}}
+  function ellipse(x,y,rx,ry,color){c.beginPath();c.ellipse(x,y,rx,ry,0,0,Math.PI*2);c.fillStyle=color;c.fill();}
+  function line(x,y,a,b,color,width=2){c.beginPath();c.moveTo(x,y);c.lineTo(a,b);c.strokeStyle=color;c.lineWidth=width;c.stroke();}
+  function glow(x,y,r){const g=c.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,'#ffc87865');g.addColorStop(1,'#ffc87800');c.fillStyle=g;c.fillRect(x-r,y-r,r*2,r*2);}
+  function lamp(x,y){glow(x,y,170);line(x,y+20,x,y+95,'#d5a968',6);ellipse(x,y+95,26,6,'#c08f56');poly([[x-22,y],[x+22,y],[x+40,y+42],[x-40,y+42]],'#ffd58b');line(x-35,y+36,x+35,y+36,'#fff0b6',3);}
+  function windowAt(x,y,w,h){box(x-8,y-7,w+16,h+16,'#74503d');box(x,y,w,h,'#163345');ellipse(x+w*.69,y+h*.25,19,19,'#e5d9a8');poly([[x,y+h],[x,y+h*.72],[x+w*.27,y+h*.51],[x+w*.48,y+h*.72],[x+w*.77,y+h*.55],[x+w,y+h*.68],[x+w,y+h]],'#234a53',null);for(let i=0;i<32;i++){let a=(i*37)%(w-12),b=(i*53)%(h-20);line(x+a+10,y+b,x+a+3,y+b+16,'#aacbd58a');}line(x+w/2,y,x+w/2,y+h,'#93634c',8);line(x,y+h/2,x+w,y+h/2,'#93634c',8);box(x-16,y+h,w+32,12,'#946349');}
+  function cabinet(x,y,w,h){box(x,y,w,h,'#653d36');box(x-9,y-10,w+18,15,'#aa7353');box(x+10,y+11,w-20,h-25,'#855039');line(x+w/2,y+12,x+w/2,y+h-15,'#3c2930',3);ellipse(x+w/2-13,y+h/2,4,4,'#f5c27a');ellipse(x+w/2+13,y+h/2,4,4,'#f5c27a');}
+  function paper(x,y,w=64,h=36){box(x,y,w,h,'#f2d5a1','#855946',2);for(let i=1;i<4;i++)line(x+9,y+i*h/5,x+w-10-i*4,y+i*h/5,'#a57959',1);}
+  const g=c.createLinearGradient(0,0,0,H);g.addColorStop(0,['#352e41','#583740','#2c394f','#463345','#243d45'][room]);g.addColorStop(1,['#77604e','#926248','#617079','#7a533f','#18313a'][room]);c.fillStyle=g;c.fillRect(0,0,W,H);
+  for(let x=0;x<W;x+=50){line(x,0,x,390,'#e3b47920');line(x+5,0,x+5,390,'#261c2d23');}
+  box(-3,364,1006,42,'#4c3435');line(0,365,W,365,'#b58568',4);
+  box(-4,404,1008,180,'#694237',null,0);for(let i=-6;i<7;i++)line(500+i*82,404,500+i*178,580,'#402b31',3);[432,477,530].forEach(y=>line(0,y,W,y,'#bd86664f',2));
+  ellipse(510,504,325,57,'#412c31');ellipse(510,497,307,49,room===2?'#517a7b':'#92584d');ellipse(510,496,268,39,'#ce966455');ellipse(510,496,225,31,room===2?'#517a7b':'#92584d');
+  if(room===0){
+    windowAt(405,78,186,205);
+    box(38,100,215,306,'#69463b');box(54,115,184,274,'#342933');
+    for(let row=0;row<4;row++){let y=166+row*68;for(let i=0;i<10;i++){let a=20+(i*31+row*17)%45;box(63+i*16,y-a,13,a,['#bd7164','#c39b5f','#507c80','#767393','#718858'][(i+row*2)%5]);line(65+i*16,y-9,73+i*16,y-9,'#e3b982');}box(46,y,199,10,'#a87858');}
+    cabinet(764,284,181,128); box(782,175,140,90,'#5a3a30');box(793,186,118,67,'#c49867');poly([[796,247],[825,211],[851,238],[878,206],[908,247]],'#536c65',null);
+    ellipse(503,490,230,23,'#302530');box(336,348,23,131,'#4e3231');box(640,348,23,131,'#4e3231');box(345,365,311,76,'#764b3e');box(421,379,151,46,'#9b654a');ellipse(497,402,12,5,'#e7b76e');poly([[347,310],[648,310],[687,365],[311,365]],'#a87857');box(311,355,375,18,'#70483b');lamp(585,229);paper(403,323,75,32);paper(468,315,55,26);
+  }else if(room===1){
+    windowAt(390,86,206,149);
+    cabinet(173,248,505,155);for(let i=0;i<3;i++)box(191+i*156,266,133,55,'#9f684b');box(159,239,535,25,'#b58a60');paper(218,215,76,39);
+    box(750,106,173,306,'#9ea8a1','#354247',16);box(762,118,149,78,'#b5b8a5','#526464',10);box(762,204,149,197,'#b7bba8','#526464',10);box(777,219,8,44,'#596c69');box(777,142,8,28,'#596c69');
+    line(440,0,440,101,'#35252a',5);glow(440,135,170);poly([[421,99],[459,99],[496,145],[384,145]],'#e0aa68');ellipse(440,145,56,8,'#ffd898');
+    ellipse(469,531,251,27,'#382a2e');[285,611].forEach(x=>box(x,429,24,92,'#553630'));ellipse(463,429,245,65,'#81523b');ellipse(463,418,244,58,'#b78559');poly([[400,372],[523,372],[550,460],[378,460]],'#6f8076',null);ellipse(463,413,47,20,'#e0caa6');ellipse(463,413,36,14,'#c2aa8e');
+  }else if(room===2){
+    windowAt(384,78,232,202);poly([[367,68],[410,68],[405,289],[350,303]],'#667e92');poly([[588,68],[631,68],[649,303],[599,289]],'#667e92');
+    box(107,240,285,188,'#765044','#302932',19);box(123,255,254,169,'#a3785e','#553b38',15);poly([[123,341],[376,341],[422,462],[75,462]],'#ddd0ac');box(151,316,148,54,'#eee2bf','#766052',16);poly([[119,383],[387,380],[425,481],[76,481]],'#577e85');for(let i=0;i<4;i++)line(113-i*10,402+i*19,394+i*9,400+i*19,'#a4bbad',3);paper(213,396,78,37);
+    cabinet(729,327,153,118);lamp(907,241);box(766,354,109,55,'#424c4b');box(783,362,70,24,'#748e7f');ellipse(809,374,9,9,'#2b3638');ellipse(834,374,9,9,'#2b3638');
+    ellipse(821,154,59,59,'#493b39');ellipse(821,154,49,49,'#d7b484');for(let i=0;i<12;i++){const a=i*Math.PI/6;ellipse(821+39*Math.sin(a),154+39*Math.cos(a),2,2,'#674837');}line(821,154,804,137,'#513a35',4);line(821,154,821,119,'#513a35',3);
+  }else if(room===3){
+    glow(502,230,245);box(333,62,330,365,'#5a3b32','#34252b',78);box(355,82,286,345,'#865333','#d19d64',65);for(let x=390;x<620;x+=45)line(x,118,x,424,'#674330',3);box(410,245,178,70,'#b28151');[445,500,555].forEach(x=>box(x-18,260,36,40,'#382c32','#e1b373'));lamp(220,162);lamp(788,162);
+  }else{
+    // The welcome scene is the house exterior.
+    c.fillStyle='#203c46';c.fillRect(0,0,W,H);ellipse(760,115,70,70,'#f4d7a5');poly([[0,374],[170,235],[315,348],[553,224],[769,351],[1000,255],[1000,580],[0,580]],'#294c52',null);poly([[0,427],[244,347],[416,390],[652,332],[1000,405],[1000,580],[0,580]],'#36595a',null);
+    for(const x of [91,160,867,935]) for(let i=0;i<3;i++)poly([[x,190+i*43],[x-42-i*10,302+i*42],[x+42+i*10,302+i*42]],'#203f46',null);
+    glow(500,370,230);box(304,273,390,195,'#936451');box(583,162,43,99,'#7b5350');poly([[260,294],[493,122],[743,294]],'#4d3d4d');poly([[282,289],[494,137],[718,289]],'#695164');for(let i=0;i<5;i++)line(493-i*39,148+i*27,493+i*43,148+i*27,'#a47d75',2);
+    [345,571].forEach(x=>{box(x,318,79,83,'#ffcd7f','#664947',10);line(x+39,319,x+39,400,'#815746',5);line(x,360,x+79,360,'#815746',5);});box(456,327,86,140,'#5a3d41','#3f2d39',10);ellipse(520,399,5,5,'#efd09b');poly([[454,467],[546,467],[636,580],[341,580]],'#a38372',null);
+    for(let i=0;i<68;i++){let x=(i*127)%1000,y=(i*137)%580;line(x,y,x-7,y+18,'#b7d0d15b');}
+  }
+}
+
+const meaningCost=25;
+const medal=(points,max,usedMeaning)=>usedMeaning||points*100<max*65
+ ?'Bronze Detective':points*100>=max*90?'Golden Mystery Solver':'Silver Investigator';
+const studyMeaning=[
+ 'A 还不知道该用什么方法来回答这个问题。',
+ 'B 觉得这件事不难。',
+ 'B 主动说，自己会告诉 A 解决问题的方法。'
+];
+const dinnerMeaning=[
+ 'A 想知道晚上这一餐要吃哪种食物。',
+ 'B 说大家今晚吃炸鸡。',
+ 'A 听了很高兴，主动说自己来准备餐桌。'
+];
+const thunderMeaning=[
+ 'A 问 B 昨天晚上有没有听见打雷。',
+ 'B 听见了。因为太吵，B 没办法入睡。',
+ 'A 和 B 一样，也没办法入睡。'
+];
+const meaningSteps=[
+ [
+  [],
+  [studyMeaning,[studyMeaning[2]]],
+  [null,[studyMeaning[0]],[studyMeaning[0]]],
+  [[studyMeaning[1]],['今天这节课不难。']]
+ ],
+ [
+  [null,null,dinnerMeaning],
+  [[dinnerMeaning[0]],[dinnerMeaning[0]],[dinnerMeaning[1]]],
+  [dinnerMeaning.slice(0,2)],
+  [[dinnerMeaning[2]],[dinnerMeaning[2]],[dinnerMeaning[1]],['这是在夸妈妈做的炸鸡味道很好。']]
+ ],
+ [
+  [],
+  [[thunderMeaning[0]]],
+  [null,['那一次，她发出的声音没有被我听见。'],[thunderMeaning[0],thunderMeaning[1]]],
+  [thunderMeaning,[thunderMeaning[2]],['这里问的是有没有办法听见某种声音。']],
+  [[thunderMeaning[2]],['书不难，所以能明白书的内容。','水果多，没办法全部吃掉。','桌子太重，没办法把它移走。','以前没学过法语，所以法语说得不好。','那部电影很多人想看，所以问能不能买到票。','时间只剩五分钟，所以问能不能及时到。']]
+ ]
+];
+const doorMeanings=[studyMeaning[2],dinnerMeaning[1],thunderMeaning[0]];
+
+const app=document.querySelector('main'), overlay=document.querySelector('dialog'), modal=overlay.firstElementChild;
+const saveKey='mystery-house-g4-v1';
+const empty=()=>({name:'',room:0,done:{},steps:{},hints:{},meanings:{},bag:[],seen:{},won:false,pinyin:true});
+let state=empty(), home=true, active=null, selection='', draft=[], pending=null, feedback='', good=false;
+try{const old=JSON.parse(localStorage.getItem(saveKey));if(old&&old.done&&old.steps&&old.hints&&old.seen&&Array.isArray(old.bag))state={...empty(),...old};}catch{}
+const esc=s=>String(s).replace(/[&<>"']/g,x=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[x]));
+const rich=x=>typeof x==='string'?esc(x):'<span class="han" lang="zh">'+esc(x.han)+'<span class="py">'+esc(x.py)+'</span></span>';
+const btn=(label,action,value='',extra='')=>'<button type="button" data-action="'+action+'" data-value="'+esc(value)+'" '+extra+'>'+label+'</button>';
+const id=(r,i)=>r+'-'+i;
+const key=()=>id(state.room,active);
+const current=()=>tasks[state.room]?.findIndex((_,i)=>!state.done[id(state.room,i)]);
+const save=()=>{try{localStorage.setItem(saveKey,JSON.stringify(state));}catch{}};
+const storageOK=()=>{try{localStorage.setItem(saveKey+'-probe','1');localStorage.removeItem(saveKey+'-probe');return true;}catch{return false;}};
+const meaningCount=()=>Object.keys(state.meanings).length;
+const score=()=>Math.max(0,Object.values(state.done).reduce((n,v)=>n+v,0)-meaningCost*meaningCount());
+const total=tasks.reduce((n,a)=>n+a.length,1);
+const hintCount=()=>Object.values(state.hints).reduce((n,v)=>n+v,0);
+const setFeedback=(msg,pass=false)=>{feedback=msg;good=pass;};
+const hintContent=(hintKey,lines)=>{
+ const n=state.hints[hintKey]||0;
+ return '<section class="hints">'+btn('提示 · Hint '+Math.min(n+1,3),'hint',hintKey,n>=3?'disabled':'')+' <small>'+n+'/3 · '+(100-25*n)+' pts</small>'+lines.slice(0,n).map(x=>'<p class="caption">'+rich(x)+'</p>').join('')+'</section>';
+};
+function bag(){
+ return '<section class="panel bag"><h3>背包 · Inventory</h3><div class="row">'+(state.bag.length?state.bag.map(item=>{
+   const [icon,zh,en]=items[item];
+   const label=item==='chicken'?rich(z(zh,'zhá jī')):zh+' <small>'+en+'</small>';
+   return btn(icon+' '+label,'item',item,'class="item" draggable="true" data-item="'+item+'" aria-pressed="'+(selection===item)+'"');
+ }).join(''):'<small>还没有物品 · No items yet.</small>')+'</div></section>';
+}
+function scene(room,hotspots=''){
+ return '<div class="scene"><canvas width="1000" height="580" aria-hidden="true"></canvas>'+hotspots+'</div>';
+}
+function medalRules(){
+ return '<section class="medal-rules"><h3>奖杯规则 · Medal rules</h3><ul>'+
+  '<li>🥇 金牌：90% 或以上 · Gold: 90% or more</li>'+
+  '<li>🥈 银牌：65% 到未满 90% · Silver: 65% to under 90%</li>'+
+  '<li>🥉 铜牌：低于 65% · Bronze: under 65%</li></ul>'+
+  '<p>每次提示扣 25 分。 · Each hint costs 25 points.</p>'+
+  '<p><strong>查看句意：每个机关扣 25 分，本局只能拿铜牌。<br>View Meaning: −25 points per puzzle. Bronze only.</strong></p></section>';
+}
+function render(){
+ document.body.classList.toggle('no-pinyin',!state.pinyin);
+ document.querySelector('#pinyin').textContent=state.pinyin?'隐藏拼音 · Hide Pinyin':'显示拼音 · Show Pinyin';
+ document.querySelector('#board').hidden=home||state.won;
+ document.querySelector('#meaning').hidden=home||state.won;
+ if(home){
+ app.innerHTML='<section class="hero"><div><div class="kicker">G4 中文期末复习 · Mandarin Review</div><h1>神秘小屋<span>The Mystery House</span></h1><p>你收到一封神秘邀请函。你走进小屋，大门突然锁上了。窗外下起雨来，远处传来雷声。</p><p class="muted">An invitation brings you to an old house. The door locks behind you as a storm begins. Find three clues and unlock the door.</p><form id="start"><label for="player">姓名 · Your name</label><div class="row"><input id="player" maxlength="40" required autocomplete="off" placeholder="Enter your name"><button class="primary" type="submit">开始 · Start Game</button></div></form>'+(state.name?'<p>'+btn('继续 '+esc(state.name)+' 的游戏 · Continue','resume')+'</p>':'')+'<div class="rules"><b>玩法 · How to play</b><br>Tap furniture to inspect it. Read the Chinese clues and put tiles in order. To use an item, drag it from your bag or tap the item and then the slot. Hints cost 25 points each.<br><small>点击家具找线索。点击词块排序。拖动物品，或先点物品再点机关。</small></div>'+medalRules()+'</div>'+scene(4)+'</section>';
+ paint(app.querySelector('canvas'),4);
+ return;
+ }
+ if(state.won){
+  const accolade=medal(score(),total*100,meaningCount()>0);
+  app.innerHTML='<section class="panel victory"><div class="trophy" aria-label="Gold trophy">🏆</div><p class="kicker">成功逃脱 · House unlocked</p><h2>'+esc(state.name)+'</h2><p>'+accolade+'</p><div class="stats"><div><strong>'+score()+' / '+(total*100)+'</strong>总分 · Score</div><div><strong>3 / 3</strong>完成章节 · Chapters</div><div><strong>'+Object.keys(state.done).length+' / '+total+'</strong>解开的谜题 · Puzzles</div><div><strong>'+hintCount()+'</strong>提示次数 · Hints used</div><div><strong>'+meaningCount()+'</strong>查看句意 · Meanings used</div></div>'+(meaningCount()?'<p>本局查看过句意，只能拿铜牌。 · Meaning used: Bronze only.</p>':'')+'<p class="muted">给老师看你的奖杯 · Show your teacher for ClassDojo.</p><div class="row">'+btn('返回首页 · Home','home')+'</div></section>';
+  return;
+ }
+ const r=state.room, [zh,en,story,zhStory]=labels[r], list=tasks[r]||[], next=current();
+ const nav=labels.map(([cn,eng],i)=>'<div class="chapter '+(i===r?'active':i<r?'done':'')+'"><b>'+eng+'</b>'+cn+'</div>').join('');
+ const hotspots=list.length?list.map(([cn,eng,x,y],i)=>{
+  const solved=!!state.done[id(r,i)], enabled=next<0||i<=next;
+  return btn('<i>'+(solved?'✓':enabled?'◇':'·')+'</i><span>'+eng+'</span>','spot',i,'class="spot" style="--x:'+x+'%;--y:'+y+'%" data-open="'+enabled+'" data-done="'+solved+'" data-short="'+cn+'" aria-label="'+eng+' / '+cn+'"');
+ }).join(''):btn('<i>◇</i><span>Door lock</span>','lock','','class="spot" style="--x:50%;--y:48%" data-short="门锁"');
+ const progress=list.map(([cn,eng],i)=>'<li class="'+(state.done[id(r,i)]?'cleared':i===next?'current':'')+'">'+(state.done[id(r,i)]?'✓':i===next?'◇':'·')+' '+cn+' · '+eng+'</li>').join('');
+ const sidebar= r===3?'<section class="panel"><h3>最后的机关 · Final lock</h3><p class="muted">Read the three evidence cards and use their numbers in room order.</p>'+btn('打开门锁 · Inspect lock','lock','','class="primary"')+'</section>':bag()+'<section class="panel"><h3>调查进度 · Investigation</h3><ul class="route">'+progress+'</ul>'+(next===-1?btn('查看证据，继续 · Take clue & continue','next','','class="primary"'):'')+'</section>';
+ app.innerHTML='<nav class="chapters" aria-label="Chapters">'+nav+'</nav><h2 class="roomtitle">'+zh+'<span>'+en+'</span></h2><p class="muted">'+zhStory+'<br>'+story+'</p><div class="layout"><div>'+scene(r,hotspots)+'<p class="caption">'+esc(state.name)+' · '+score()+' pts'+(storageOK()?'':' · Saving is unavailable on this device.')+'</p></div><aside>'+sidebar+'</aside></div>';
+ paint(app.querySelector('canvas'),r);
+}
+function currentMeaning(){
+ if(active==='lock'&&state.room===3)return {id:'door',lines:doorMeanings};
+ if(!Number.isInteger(active)||state.done[key()]||active!==current())return null;
+ const lines=meaningSteps[state.room]?.[active]?.[state.steps[key()]||0];
+ return lines?{id:key(),lines}:null;
+}
+function openMeaning(){
+ const entry=currentMeaning();
+ if(!entry){
+  show('句意 · Meaning','<p>打开有中文句子的机关，就可以查看句意。</p><p>Open a puzzle with Chinese sentences to use Meaning.</p>'+btn('知道了 · OK','close'));
+  return;
+ }
+ if(state.meanings[entry.id]){
+  show('句意 · Meaning','<ul class="meaning-notes" lang="zh">'+entry.lines.map(line=>'<li>'+esc(line)+'</li>').join('')+'</ul>',true);
+  return;
+ }
+ show('查看句意？ · View Meaning?','<p>这个机关扣 25 分。本局只能拿铜牌。</p><p>Viewing costs 25 points. You can only earn Bronze this game.</p>'+btn('查看句意 · View Meaning','reveal-meaning','','class="primary"'),true);
+}
+function show(title,body,back=false){
+ const controls=btn(state.pinyin?'隐藏拼音 · Hide Pinyin':'显示拼音 · Show Pinyin','pinyin')+
+  (!back&&currentMeaning()&&title!=='句意 · Meaning'?btn('句意 · Meaning','meaning'):'')+
+  (!back&&title!=='线索板 · Clue Board'&&Number.isInteger(active)?btn('线索板 · Clue Board','board'):'')+
+  btn(back?'返回机关 · Back':'关闭 · Close',back?'back':'close');
+ modal.innerHTML='<div class="modal-top"><h3 id="modal-title">'+title+'</h3><div class="row">'+controls+'</div></div>'+body;
+ if(!overlay.open)overlay.showModal();
+}
+function note(x){return '<div class="statement">'+rich(x)+'</div>';}
+function ordered(n,seed){
+ if(n<2)return [0];
+ const indices=Array.from({length:n},(_,i)=>i);
+ // Fixed per puzzle so reopening or toggling pinyin does not move tiles.
+ let x=seed+173;
+ for(let i=n-1;i>0;i--){x=(x*48271)%2147483647;const j=x%(i+1);[indices[i],indices[j]]=[indices[j],indices[i]];}
+ if(indices.every((v,i)=>v===i))indices.push(indices.shift());
+ return indices;
+}
+function puzzle(){
+ if(!Number.isInteger(active)||!tasks[state.room]?.[active])return;
+ const r=state.room,t=tasks[r][active], k=key(), i=state.steps[k]||0;
+ if(state.done[k]){
+  show(t[0]+' · '+t[1],'<p class="good">已解开 · Solved ✓</p>'+evidence(r,active));return;
+ }
+ if(active!==current()){show(t[0]+' · '+t[1],'<p>先找前面的线索。 · Investigate '+esc(tasks[r][current()][1])+' first.</p>');return;}
+ const step=t[4][i], seed=r*91+active*23+i*3;
+ let html='<p class="kicker">'+(i+1)+' / '+t[4].length+'</p>';
+ if(step.kind==='pick'){
+  html+='<p>读懂线索 · Read the clue and make a choice.</p>'+note(step.prompt)+context(r,active,i)+'<div class="choices">'+ordered(step.choices.length,seed).map(n=>btn(rich(step.choices[n]),'pick',n)).join('')+'</div>';
+ }else if(step.kind==='order'){
+  html+='<p>排列词块 · '+esc(step.prompt)+'</p><div class="answerstrip chips" aria-label="Your order">'+draft.map((n,j)=>btn(rich(step.choices[n]),'untile',j)).join('')+'</div><div class="chips">'+ordered(step.choices.length,seed).map(n=>btn(rich(step.choices[n]),'tile',n,draft.includes(n)?'disabled':'')).join('')+'</div>'+btn('检查顺序 · Check order','check','',draft.length===step.choices.length?'class="primary"':'disabled');
+ }else if(step.kind==='match'){
+  const pairs=step.pairs;
+  const left=step.reverse?1:0, right=1-left;
+  html+='<p>配对 · '+esc(step.prompt||'Tap a card in each column to make a pair.')+'</p><div class="match-grid"><div class="match-col">'+ordered(pairs.length,seed+7).map(n=>btn((draft[n]!=null?'<span class="badge">'+(n+1)+'</span>':'')+rich(pairs[n][left]),'left',n,'aria-pressed="'+(pending===n)+'"')).join('')+'</div><div class="match-col">'+ordered(pairs.length,seed+11).map(n=>{
+   const assigned=draft.indexOf(n);return btn((assigned>=0?'<span class="badge">'+(assigned+1)+'</span>':'')+rich(pairs[n][right]),'right',n,assigned>=0?'class="linked"':'');
+  }).join('')+'</div></div>'+btn('检查配对 · Check matches','check','',draft.filter(n=>n!=null).length===pairs.length?'class="primary"':'disabled');
+ }else{
+  html+='<p>使用物品 · '+esc(step.prompt)+'</p>'+context(r,active,i)+bag()+btn('放入物品 · Place item here','place','','class="drop" data-drop="true"');
+ }
+ html+='<p class="feedback '+(good?'good':'')+'" role="status">'+esc(feedback)+'</p>'+hintContent(k,t.slice(5,8));
+ show(t[0]+' · '+t[1],html);
+}
+function context(r,a,i){
+ if(r===1&&a===2)return '<p class="caption">Use the conversation on your Clue Board.</p>';
+ if(r===1&&a===3&&i===2)return note(dialogue[1][1]);
+ if(r===2&&a===1)return '<p class="caption">Use the diary entry on your Clue Board.</p>';
+ if(r===2&&a===2&&i===2)return note(dialogue[2][0]);
+ if(r===2&&a===4&&i===0)return note(dialogue[2][1]);
+ return '';
+}
+function evidence(r,i){
+ if(r===0&&i===1)return dialogue[0].map(note).join('');
+ if(r===0&&i===2)return note(dialogue[0][0]);
+ if(r===0&&i===3)return note(z('今天的课很容易。','jīn tiān de kè hěn róng yì'));
+ if(r===1&&i===0)return dialogue[1].map(note).join('');
+ if(r===1&&i===2)return note(z('炸鸡','zhá jī'));
+ if(r===1&&i===3)return note(z('妈妈做的炸鸡太好吃了！','mā ma zuò de zhá jī tài hǎo chī le'));
+ if(r===2&&i===0)return dialogue[2].slice(0,2).map(note).join('');
+ if(r===2&&i===1)return note(z('昨晚：雷声','zuó wǎn: léi shēng'));
+ if(r===2&&i===2)return note(z('我没听到她的声音。','wǒ méi tīng dào tā de shēng yīn'));
+ if(r===2&&i===3)return dialogue[2].map(note).join('');
+ if(r===2&&i===4)return note(dialogue[2][2]);
+ return '';
+}
+function receive(step){
+ state.steps[key()]=(state.steps[key()]||0)+1;
+ draft=[];pending=null;
+ setFeedback('正确！ · That fits. Keep going.',true);
+ const t=tasks[state.room][active];
+ if(state.steps[key()]===t[4].length){
+  state.done[key()]=100-25*(state.hints[key()]||0);
+  if(t[8]&&!state.bag.includes(t[8]))state.bag.push(t[8]);
+  save();render();
+  const loot=t[8]?'<p>'+items[t[8]][0]+' '+items[t[8]][1]+' · '+items[t[8]][2]+' → Inventory</p>':'';
+  show(t[0]+' · '+t[1],'<p class="good">机关已解开 · Puzzle solved · +'+state.done[key()]+' pts</p>'+loot+evidence(state.room,active)+btn('继续调查 · Continue exploring','close','','class="primary"'));
+  return;
+ }
+ save();puzzle();
+}
+function tryItem(item){
+ if(!Number.isInteger(active)||active!==current())return;
+ const step=tasks[state.room][active][4][state.steps[key()]||0];
+ if(step?.kind!=='use')return;
+ if(!state.bag.includes(item)){setFeedback('先选择物品。 · Select an item from your bag first.');puzzle();return;}
+ if(item!==step.item){setFeedback('再读一次线索。 · This item does not fit. Read the clue and try another item.');puzzle();return;}
+ state.bag=state.bag.filter(x=>x!==item);selection='';receive(step);
+}
+function board(){
+ const entries=[];
+ for(let r=0;r<Math.min(state.room+1,3);r++){
+  for(let i=0;i<tasks[r].length;i++){
+   const k=id(r,i);
+   if(state.done[k]||state.seen[k]){
+    const t=tasks[r][i], text=evidence(r,i);
+    entries.push('<article><b>'+t[0]+' · '+t[1]+'</b><p class="'+(state.done[k]?'good':'muted')+'">'+(state.done[k]?'已解开 · Solved':'待解决 · Open puzzle')+'</p>'+text+'</article>');
+   }
+  }
+ }
+ const next=current(), t=tasks[state.room]?.[next];
+ const cardsHtml=cards.slice(0,state.room+(current()===-1?1:0)).map(card=>'<article><h3>'+card.title+'</h3>'+note(card.quote)+'<p>'+card.prompt+'</p><div class="card-map">'+card.options.map(([n,x])=>'<span><b class="badge">'+n+'</b>'+rich(x)+'</span>').join('')+'</div></article>').join('');
+ show('线索板 · Clue Board','<div class="notes">'+cardsHtml+(t?'<article><b>待解决 · Next puzzle</b><p>'+t[0]+' · '+t[1]+'</p></article>':'')+entries.join('')+'</div>',active==='lock'||Number.isInteger(active)&&!state.done[key()]);
+}
+const lockHints=['Open the clue board and read the three evidence cards.','Read the lines about how B helps, what they eat, and when they hear thunder.','Find the number next to the matching Chinese phrase on each card. Use study, dinner, then thunder.'];
+function lock(){
+ active='lock';
+ show('大门密码锁 · Door lock',btn('查看线索板 · Open Clue Board','board')+'<p class="caption">1. Study → 2. Dinner → 3. Thunder</p><form id="lockform" class="row"><label for="digits">三位密码 · 3-digit code</label><input class="pin" id="digits" inputmode="numeric" autocomplete="off" maxlength="3" pattern="[0-9]{3}" required><button class="primary" type="submit">开门 · Unlock</button></form><p class="feedback" role="status">'+esc(feedback)+'</p>'+hintContent('door',lockHints));
+}
+function clearModal(){
+ if(overlay.open)overlay.close();
+ active=null;draft=[];pending=null;setFeedback('');
+}
+document.addEventListener('click',event=>{
+ const button=event.target.closest('[data-action]');
+ if(!button||button.disabled)return;
+ const action=button.dataset.action, raw=button.dataset.value, n=Number(raw);
+ const isTask=Number.isInteger(active)&&!state.done[key()]&&active===current();
+ const step=isTask?tasks[state.room][active][4][state.steps[key()]||0]:null;
+ switch(action){
+ case 'pinyin':state.pinyin=!state.pinyin;save();document.body.classList.toggle('no-pinyin',!state.pinyin);document.querySelectorAll('[data-action=pinyin]').forEach(el=>el.textContent=state.pinyin?'隐藏拼音 · Hide Pinyin':'显示拼音 · Show Pinyin');break;
+ case 'resume':home=false;render();break;
+ case 'home':clearModal();home=true;render();break;
+ case 'board':board();break;
+ case 'meaning':
+  if(!overlay.open&&state.room===3)active='lock';
+  openMeaning();break;
+ case 'reveal-meaning':{
+  const entry=currentMeaning();
+  if(entry&&!state.meanings[entry.id]){
+   state.meanings[entry.id]=true;
+   save();render();
+  }
+  openMeaning();break;
+ }
+ case 'back':if(active==='lock')lock();else puzzle();break;
+ case 'close':clearModal();break;
+ case 'spot':
+  active=n;draft=[];pending=null;setFeedback('');
+  if(!state.done[key()]&&n===current()){state.seen[key()]=true;save();}
+  puzzle();break;
+ case 'item':
+  selection=selection===raw?'':raw;
+  document.querySelectorAll('[data-item]').forEach(el=>el.setAttribute('aria-pressed',String(el.dataset.item===selection)));
+  break;
+ case 'place':tryItem(selection);break;
+ case 'pick':
+  if(step?.kind!=='pick')break;
+  if(n===0)receive(step);else{setFeedback('再读一次。 · Look again at who did what, and when.');puzzle();}break;
+ case 'tile':draft.push(n);setFeedback('');puzzle();break;
+ case 'untile':draft.splice(n);setFeedback('');puzzle();break;
+ case 'left':pending=n;puzzle();break;
+ case 'right':
+  if(pending===null){setFeedback('先点左边的卡片。 · Choose a card on the left first.');puzzle();break;}
+  if(draft.includes(n))draft[draft.indexOf(n)]=null;
+  draft[pending]=n;pending=null;setFeedback('');puzzle();break;
+ case 'check':{
+  const count=step.kind==='order'?step.choices.length:step.pairs.length;
+  if(Array.from({length:count},(_,j)=>draft[j]===j).every(Boolean))receive(step);
+  else{setFeedback(step.kind==='match'?'有些配对还不合适。 · Check the meanings and adjust your pairs.':'顺序还需要调整。 · Tap a tile in your answer to remove it and the tiles after it.');puzzle();}
+  break;
+ }
+ case 'hint':
+  state.hints[raw]=Math.min(3,(state.hints[raw]||0)+1);save();
+  if(raw==='door')lock();else puzzle();
+  break;
+ case 'next':
+  if(current()!==-1)break;
+  show('找到证据 · Evidence found',note(cards[state.room].quote)+'<p>线索已加入线索板。 · Take this evidence to the next room.</p>'+btn('进入下一间 · Enter next room','advance','','class="primary"'));
+  break;
+ case 'advance':
+  if(current()!==-1)break;
+  state.room++;clearModal();save();render();window.scrollTo(0,0);break;
+ case 'lock':setFeedback('');lock();break;
+ }
+});
+document.addEventListener('submit',event=>{
+ event.preventDefault();
+ if(event.target.id==='start'){
+  const input=document.querySelector('#player'), name=input.value.trim();
+  if(!name){input.setCustomValidity('Please enter your name.');input.reportValidity();input.oninput=()=>input.setCustomValidity('');return;}
+  const pinyin=state.pinyin;state={...empty(),name,pinyin};home=false;selection='';save();render();window.scrollTo(0,0);
+ }else if(event.target.id==='lockform'&&state.room===3){
+  const input=document.querySelector('#digits');
+  if(input.value===cards.map(x=>x.digit).join('')){
+   state.done.door=100-25*(state.hints.door||0);state.won=true;clearModal();save();render();window.scrollTo(0,0);
+  }else{setFeedback('门还锁着。 · Compare the three evidence cards and check the order.');modal.querySelector('.feedback').textContent=feedback;input.select();}
+ }
+});
+overlay.addEventListener('cancel',event=>{event.preventDefault();clearModal();});
+document.addEventListener('dragstart',event=>{
+ const item=event.target.closest('[data-item]');if(item){event.dataTransfer.setData('text/plain',item.dataset.item);event.dataTransfer.effectAllowed='move';}
+});
+document.addEventListener('dragover',event=>{
+ if(event.target.closest('[data-drop]')){event.preventDefault();event.dataTransfer.dropEffect='move';}
+});
+document.addEventListener('drop',event=>{
+ if(event.target.closest('[data-drop]')){event.preventDefault();tryItem(event.dataTransfer.getData('text/plain'));}
+});
+render();
+</script></body></html>
